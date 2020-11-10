@@ -1,0 +1,5 @@
+{
+  "project_name": "api-tests",
+  "add_skeletons": ["Yes", "No"],
+  "line_length": 100
+}
