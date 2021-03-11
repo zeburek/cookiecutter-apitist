@@ -1,4 +1,4 @@
-# Cookiecutter template for api tests with [apitist](https://github.com/zeburek/apitist)
+# Cookiecutter template for api tests with [apitist](https://github.com/zeburek/python-apitist)
 
 ## Usage
 
