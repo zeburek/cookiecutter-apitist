@@ -1,18 +1,20 @@
 from dataclasses import dataclass, field
 
-from apitist.hooks import (
+from apitist import (
     PrepRequestInfoLoggingHook,
     RequestDataclassConverterHook,
     ResponseDataclassConverterHook,
     ResponseInfoLoggingHook,
+    Session,
+    session,
 )
-from apitist.requests import Session, session
+from apitist.decorators import get
 
 from common import models as m
 
 
-def init_session():
-    s = session()
+def init_session(base_url: str = None):
+    s = session(base_url)
     s.add_hook(PrepRequestInfoLoggingHook)
     s.add_hook(ResponseInfoLoggingHook)
     s.add_hook(RequestDataclassConverterHook)
@@ -23,7 +25,10 @@ def init_session():
 @dataclass
 class Client:
     host: str
-    _s: Session = field(init=False, default_factory=init_session)
+    session: Session = field(init=False)
+
+    def __post_init__(self):
+        self.session = init_session(self.host)
 {% if cookiecutter.add_skeletons == "Yes" %}
 
     # Paths
@@ -31,11 +36,13 @@ class Client:
     GET_IP = "/ip"
 
     # Endpoints access
+    @get(GET_USER_AGENT)
     def get_user_agent(self):
-        return self._s.get(self.host + self.GET_USER_AGENT)
+        ...
 
+    @get(GET_IP)
     def get_ip(self):
-        return self._s.get(self.host + self.GET_IP)
+        ...
 
     # Some logic
     def get_client_info(self):
